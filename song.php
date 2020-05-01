@@ -65,6 +65,13 @@ width: 100%;
 
 <?php
 	
+	
+// try to connect to the server.
+include("config.php");
+$link = mysqli_connect("localhost", "$username", "$password", "$db");
+
+
+	
 $songid = $_REQUEST['songid'];
 
 
@@ -73,8 +80,6 @@ function timeround($seconds) {
   return sprintf('%01d:%02d', ($t/60%60), $t%60);
 }
 
-// try to connect to the server.
-$link = mysqli_connect("localhost", "uxlaunch_jon", "up3pperr", "uxlaunch_general");
 
 // make sure we can really connect. If not, show error message.
 if (mysqli_connect_errno()) {
