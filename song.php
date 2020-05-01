@@ -1,77 +1,22 @@
-<style>
-
-BODY
-{
-	font-family: helvetica;
-	margin: 24px;
-	font-size: 14px;
-}	
-	
-.playlistTable
-{
-	width: 244px;
-	border-collapse: collapse;
-}	
-
-A
-{
-	color: black;
-	text-decoration: none;
-}
-
-TD
-{
-	border-bottom: 1px solid #ccc;
-}
-
-.row
-{
-font-size: 14px;
-line-height: 24px;
-width: 100%;
-}
-
-.quality
-{
-	text-align: right;
-}
-
-.red
-{
-	color: red;
-}
-
-.blue
-{
-	color: blue;
-}
-
-.total
-{
-	background-color: #efefef;
-	font-size: 14px;
-	line-height: 24px;
-}
-
-#header
-{
-	text-transform: uppercase;
-	font-weight: bold;
-	margin-bottom: 30px;
-	font-size: 18px;
-}
-	
-</style>
-
 <?php
-	
-	
-// try to connect to the server.
+// connect to the database	
 include("config.php");
 $link = mysqli_connect("localhost", "$username", "$password", "$db");
 
+// make sure we can really connect. If not, show error message.
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
+?>
 
+<html>
+<head>	
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
 	
+<?php
 $songid = $_REQUEST['songid'];
 
 
@@ -79,14 +24,6 @@ function timeround($seconds) {
   $t = round($seconds);
   return sprintf('%01d:%02d', ($t/60%60), $t%60);
 }
-
-
-// make sure we can really connect. If not, show error message.
-if (mysqli_connect_errno()) {
-    printf("Connect failed: %s\n", mysqli_connect_error());
-    exit();
-}
-
 
 $songquery = "SELECT * FROM `enthusiasticpanther_songs` where id='$songid'";
         
