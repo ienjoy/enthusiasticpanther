@@ -1,9 +1,0 @@
-<?php
-	
-$username = "";
-$password = "";
-$db = "";
-
-?>	
-
-
