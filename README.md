@@ -8,7 +8,7 @@ You need to add a config.php file to the main directory, then type your db confi
 
 
 	
-$username = "username";
-$password = "yourpassword";
+$username = "username";  
+$password = "yourpassword";  
 $db = "yourdatabase";
 
