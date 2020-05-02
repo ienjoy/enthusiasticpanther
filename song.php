@@ -1,13 +1,7 @@
 <?php
-// connect to the database	
+// try to connect to the server.
 include("config.php");
-$link = mysqli_connect("localhost", "$username", "$password", "$db");
-
-// make sure we can really connect. If not, show error message.
-if (mysqli_connect_errno()) {
-    printf("Connect failed: %s\n", mysqli_connect_error());
-    exit();
-}
+include("header.php");
 ?>
 
 <html>
@@ -17,69 +11,46 @@ if (mysqli_connect_errno()) {
 <body>
 	
 <?php
+// what song was passed in?
 $songid = $_REQUEST['songid'];
-
-
-function timeround($seconds) {
-  $t = round($seconds);
-  return sprintf('%01d:%02d', ($t/60%60), $t%60);
-}
-
 $songquery = "SELECT * FROM `enthusiasticpanther_songs` where id='$songid'";
-        
-    // if we get a result, let's do stuff:
-if ($songresult = mysqli_query($link, $songquery)) {
-	
-	
-	
-	while ($songobj = mysqli_fetch_object($songresult)) {
-		
-			$songname = $songobj->name;
-			
-						
-			// echo "<tr class='total'><td>Average song rating for $name<br />(probably wrong)</td><td class='quality'>$average</td></tr>";
 
-			
+// if we get a result, let's do stuff:
+if ($songresult = mysqli_query($link, $songquery)) {
+	while ($songobj = mysqli_fetch_object($songresult)) {		
+			$songname = $songobj->name;
 		}
 }
 
-
 // everything about the show
-echo "<div id='header'>
-				$songname
+echo "<div id='header'>$songname</div>";
 				
-				</div>";
-				
-				
-
 // this query is going to load everything about the songlist
 $query = "
-SELECT DISTINCT name, showid, songid, performances.quality, location FROM enthusiasticpanther_songperformances performances INNER JOIN enthusiasticpanther_songs songs INNER JOIN enthusiasticpanther_shows shows WHERE performances.songid = songs.id AND songid = $songid AND shows.id = performances.showid ORDER BY performances.id
+SELECT DISTINCT name, showid, songid, performances.quality, location
+FROM enthusiasticpanther_songperformances performances 
+INNER JOIN enthusiasticpanther_songs songs 
+INNER JOIN enthusiasticpanther_shows shows
+WHERE performances.songid = songs.id
+AND songid = $songid 
+AND shows.id = performances.showid 
+ORDER BY performances.id
 ";
 
+$songid = $_REQUEST['songid'];
+$prev = $songid - 1;
+$next = $songid + 1;
 
-
-	$songid = $_REQUEST['songid'];
-	
-	$prev = $songid - 1;
-	$next = $songid + 1;
-	
-	echo "<br /><br /><a href='song.php?songid=$prev'>prev</a> | <a href='song.php?songid=$next'>next</a><br /><br />";
+echo "<br /><br /><a href='song.php?songid=$prev'>prev</a> | <a href='song.php?songid=$next'>next</a><br /><br />";
 
 // if we get a result, let's do stuff:
 if ($result = mysqli_query($link, $query)) {
-	
-
-	
-	while ($obj = mysqli_fetch_object($result)) {
-      
+	while ($obj = mysqli_fetch_object($result)) {      
       $name = $obj->name;   
       $showid = $obj->showid;
       $quality = $obj->quality;  
       $songid = $obj->songid;     
-      $location = $obj->location;     
-      
-      
+      $location = $obj->location;           
     // need to compare to the previous score quality
 	$subquery = "SELECT * FROM `enthusiasticpanther_songperformances` WHERE songid='$songid' and showid < $showid ORDER BY id DESC LIMIT 1";
 	if ($subresult = mysqli_query($link, $subquery)) {
@@ -93,40 +64,23 @@ if ($result = mysqli_query($link, $query)) {
 				 }
 				
 			}
-		}
-      
-      echo "<table class='playlistTable'>" ;
-      
+		}      
+      echo "<table class='playlistTable'>" ;      
       echo "<tr class='row'>";  
       echo "<td><a href='show.php?showid=$showid'>$showid. $location</a></td>"; 	
 	  echo "<td class='quality $color'>$quality</td>";
 	  echo "</tr>";
 	}
-
-
-		
 }
-
 
 $avgquery = "SELECT avg(quality) as avgquality FROM `enthusiasticpanther_songperformances` where songid='$songid'";
     
-    // if we get a result, let's do stuff:
+// if we get a result, let's do stuff:
 if ($avgresult = mysqli_query($link, $avgquery)) {
-	
-	
-	
-	while ($avgobj = mysqli_fetch_object($avgresult)) {
-		
-			$average = (int) $avgobj->avgquality;
-						
+	while ($avgobj = mysqli_fetch_object($avgresult)) {		
+			$average = (int) $avgobj->avgquality;						
 			echo "<tr class='total'><td>Song popularity</td><td class='quality'>$average</td></tr>";
-
-			
 		}
 }
-
-	echo "</table>\r\r";
-
-	
-	
+echo "</table>\r\r";
 ?>
