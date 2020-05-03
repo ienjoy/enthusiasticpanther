@@ -11,7 +11,7 @@ include("header.php");
 <body>
 
 <?php
-	$showid = $_REQUEST['showid'];
+$showid = $_REQUEST['showid'];
     
 // everything about the show
 $showquery = "SELECT * FROM `enthusiasticpanther_shows` where id='$showid'";
@@ -46,28 +46,28 @@ echo "<br /><br /><a href='show.php?showid=$prev'>prev</a> | <a href='show.php?s
 // if we get a result, let's do stuff:
 if ($result = mysqli_query($link, $query)) {
 	while ($obj = mysqli_fetch_object($result)) {      
-      $name = $obj->name;   
-      $showid = $obj->showid;
-      $quality = $obj->quality;  
-      $songid = $obj->songid;     
+	$name = $obj->name;   
+	$showid = $obj->showid;
+	$quality = $obj->quality;  
+	$songid = $obj->songid;     
     // need to compare to the previous score quality
 	$subquery = "SELECT * FROM `enthusiasticpanther_songperformances` WHERE songid='$songid' and showid < $showid ORDER BY id DESC LIMIT 1";
 	if ($subresult = mysqli_query($link, $subquery)) {
 			while ($subobj = mysqli_fetch_object($subresult)) {
-				 $historicalquality = $subobj->quality; // what should the song be?
-				 if ($historicalquality <= $quality) // is this worse?
-				 {
+				$historicalquality = $subobj->quality; // what should the song be?
+				if ($historicalquality <= $quality) // is this worse?
+				{
 					 $color = "blue";
-				 }else{
+				}else{
 					 $color = "red";
-				 }				
+				}				
 			}
 		}      
-      echo "<table class='playlistTable'>" ;      
-      echo "<tr class='row'>";  
-      echo "<td><a href='song.php?songid=$songid'>$name</a></td>"; 	
-	  echo "<td class='quality $color'>$quality</td>";
-	  echo "</tr>";
+	echo "<table class='playlistTable'>" ;      
+	echo "<tr class='row'>";  
+	echo "<td><a href='song.php?songid=$songid'>$name</a></td>"; 	
+	echo "<td class='quality $color'>$quality</td>";
+	echo "</tr>";
 	}		
 }
 
@@ -75,9 +75,9 @@ $avgquery = "SELECT avg(quality) as avgquality FROM `enthusiasticpanther_songper
 // if we get a result, let's do stuff:
 if ($avgresult = mysqli_query($link, $avgquery)) {
 	while ($avgobj = mysqli_fetch_object($avgresult)) {		
-			$average = (int) $avgobj->avgquality; 						
-			echo "<tr class='total'><td>Concert rating</td><td class='quality'>$average</td></tr>";
-		}
+		$average = (int) $avgobj->avgquality; 						
+		echo "<tr class='total'><td>Concert rating</td><td class='quality'>$average</td></tr>";
+	}
 }
 echo "</table>\r\r";
 ?>
