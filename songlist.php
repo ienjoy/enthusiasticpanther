@@ -54,8 +54,7 @@ if ($result = mysqli_query($link, $query)) {
 		SELECT max(showid) FROM `enthusiasticpanther_songperformances` where songid = $id
 		) AS latestperformance
 		";
-		
-    
+	    
 		if ($subresult = mysqli_query($link, $subquery))
 		{
 		  	while ($subobj = mysqli_fetch_object($subresult))
@@ -68,23 +67,23 @@ if ($result = mysqli_query($link, $query)) {
 		  	}	 
 		}
      
-      echo "<td>$totalperformances</td>";
-      echo "<td>$gap</td>";
-      
-      if ($averagequality < 40)
-      {
-	  	$qualitycolour = "red";
-	  }elseif ($averagequality < 50){
+	echo "<td>$totalperformances</td>";
+	echo "<td>$gap</td>";
+	
+	if ($averagequality < 40)
+	{
+		$qualitycolour = "red";
+	}elseif ($averagequality < 50){
 		$qualitycolour = "orange";  	
-      }elseif ($averagequality > 65){
+	}elseif ($averagequality > 65){
 		$qualitycolour = "green";			    
-      }else{
-	  	$qualitycolour = "black";
-      }      
-      echo "<td style='color: $qualitycolour'> $averagequality</td>";
-	  echo "</tr>";	 
+	}else{
+		$qualitycolour = "black";
+	}      
+	echo "<td style='color: $qualitycolour'> $averagequality</td>";
+	echo "</tr>";	 
 	}
-	echo "</table>";		
+echo "</table>";		
 }
 
 
