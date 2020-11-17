@@ -22,6 +22,11 @@ TD
 	border-bottom: 1px solid #ccc;
 }
 
+#pageLayout TD.left, #pageLayout TD.right
+{
+	border-bottom: none;
+}
+
 .row
 {
 font-size: 14px;
@@ -51,7 +56,7 @@ width: 100%;
 	line-height: 24px;
 }
 
-#header
+#header, h2
 {
 	text-transform: uppercase;
 	font-weight: bold;

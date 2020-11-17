@@ -4,11 +4,6 @@ include("config.php");
 include("header.php");
 ?>
 
-<html>
-<head>	
-<link rel="stylesheet" type="text/css" href="style.css" />
-</head>
-<body>
 
 <?php
 

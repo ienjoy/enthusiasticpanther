@@ -4,11 +4,6 @@ include("config.php");
 include("header.php");
 ?>
 
-<html>
-<head>	
-<link rel="stylesheet" type="text/css" href="style.css" />
-</head>
-<body>
 
 <?php
 $showid = $_REQUEST['showid'];
@@ -49,7 +44,8 @@ if ($result = mysqli_query($link, $query)) {
 	$name = $obj->name;   
 	$showid = $obj->showid;
 	$quality = $obj->quality;  
-	$songid = $obj->songid;     
+	$songid = $obj->songid;
+	// $age = $obj->age; 
     // need to compare to the previous score quality
 	$subquery = "SELECT * FROM `enthusiasticpanther_songperformances` WHERE songid='$songid' and showid < $showid ORDER BY id DESC LIMIT 1";
 	if ($subresult = mysqli_query($link, $subquery)) {
@@ -79,5 +75,23 @@ if ($avgresult = mysqli_query($link, $avgquery)) {
 		echo "<tr class='total'><td>Concert rating</td><td class='quality'>$average</td></tr>";
 	}
 }
+
+$agequery = "
+SELECT avg(songid) as age
+FROM enthusiasticpanther_songs songs
+INNER JOIN enthusiasticpanther_songperformances performances
+WHERE performances.songid = songs.id
+AND showid = '$showid'
+ORDER BY performances.id
+";
+// if we get a result, let's do stuff:
+if ($ageresult = mysqli_query($link, $agequery)) {
+	while ($ageobj = mysqli_fetch_object($ageresult)) {		
+		$age = (int) $ageobj->age; 						
+		echo "<tr class='total'><td>Song age</td><td class='quality'>$age</td></tr>";
+	}
+}
+
+
 echo "</table>\r\r";
 ?>
