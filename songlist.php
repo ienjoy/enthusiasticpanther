@@ -43,7 +43,7 @@ if ($result = mysqli_query($link, $query)) {
 		SELECT avg(quality) FROM `enthusiasticpanther_songperformances` where songid = $id
 		) AS averagequality,
 		(
-		SELECT max(id) FROM `enthusiasticpanther_shows`
+		SELECT max(id) FROM `enthusiasticpanther_shows` where `DATE` <= CURDATE()+1
 		) AS latestconcert,
 		(
 		SELECT max(showid) FROM `enthusiasticpanther_songperformances` where songid = $id
