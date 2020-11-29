@@ -24,6 +24,10 @@ TD
 	vertical-align: top;
 }
 
+TD A:hover
+{
+	color: blue;
+}
 </style>
 
 
@@ -49,10 +53,7 @@ TD
 				if ($result = mysqli_query($link, $query)) {
 					
 					echo "<table width='100%'>";
-					echo "<tr>";
-					echo "<td><b>Location</b></td>";
-					echo "<td align='right'><b>Popularity</b></td>";
-					echo "</tr>";
+				
 								
 					while ($obj = mysqli_fetch_object($result)) {
 						  
@@ -63,7 +64,7 @@ TD
 						$standard_duration = $obj->standard_duration;
 						
 						echo "<tr>";
-						echo "<td>$location</td>";
+						echo "<td><a href='show.php?showid=$id'>$location</a></td>";
 						
 							
 						// now we need to go get other details per show
@@ -129,7 +130,19 @@ TD
 							  $showavg_percent = round((float)$showavg * 1 ) . '';
 							  
 							  
-							  echo "<td align='right'>$showavg_percent</td>";
+							  if ($showavg_percent < 50)
+							  {
+								  $qualitycolour = "red";
+							  }elseif ($showavg_percent < 58){
+								  $qualitycolour = "orange";  	
+							  }elseif ($showavg_percent > 63){
+								  $qualitycolour = "green";			    
+							  }else{
+								  $qualitycolour = "black";
+							  }      
+							  echo "<td style='color: $qualitycolour' align='right'> $showavg_percent</td>";
+							  
+							  // echo "<td align='right'>$showavg_percent</td>";
 							  // echo "<td>$mostRecentSong_beforeThisShow | $avg | $latestsong | $agescore | $agescore2</td>";
 							  
 							  
@@ -167,10 +180,6 @@ TD
 				if ($result = mysqli_query($link, $query)) {
 					
 					echo "<table width='100%'>";
-					echo "<tr>";
-					echo "<td><b>Song</b></td>";
-					echo "<td align='right'><b>Popularity</b></td>";
-					echo "</tr>";
 								
 					while ($obj = mysqli_fetch_object($result)) {
 						
@@ -178,9 +187,9 @@ TD
 						$id = $obj->id;
 						$standard_duration = $obj->standard_duration;
 						
-						echo "<tr>";
-						echo "<td>$name</td>";
-							
+						echo "<tr>";						
+						echo "<td><a href='song.php?songid=$id'>$name</a></td>";
+													
 						// now we need to go get other details per song
 						$subquery = "SELECT  (
 						SELECT count(id) FROM `enthusiasticpanther_songperformances` where songid = $id 
