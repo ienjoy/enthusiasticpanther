@@ -4,13 +4,26 @@ include("config.php");
 include("header.php");
 ?>
 
+<style>
+TD
+{
+	vertical-align: top;
+}	
+
+.right
+{
+	padding: 0 20px;	
+	font-size: 14px;
+}
+</style>
+	
 
 <?php
 $showid = $_REQUEST['showid'];
-    
+	
 // everything about the show
 $showquery = "SELECT * FROM `enthusiasticpanther_shows` where id='$showid'";
-    
+	
 // if we get a result, let's do stuff:
 if ($showresult = mysqli_query($link, $showquery)) {
 	while ($showobj = mysqli_fetch_object($showresult)) {
@@ -36,8 +49,16 @@ ORDER BY performances.id
 $showid = $_REQUEST['showid'];
 $prev = $showid - 1;
 $next = $showid + 1;
-echo "<br /><br /><a href='show.php?showid=$prev'>prev</a> | <a href='show.php?showid=$next'>next</a><br /><br />";
 
+?>
+
+
+<table id="pageLayout">
+<tr>
+<td class="left">
+<h2>Setlist</h2>
+
+<?php
 // if we get a result, let's do stuff:
 if ($result = mysqli_query($link, $query)) {
 	while ($obj = mysqli_fetch_object($result)) {      
@@ -46,7 +67,7 @@ if ($result = mysqli_query($link, $query)) {
 	$quality = $obj->quality;  
 	$songid = $obj->songid;
 	// $age = $obj->age; 
-    // need to compare to the previous score quality
+	// need to compare to the previous score quality
 	$subquery = "SELECT * FROM `enthusiasticpanther_songperformances` WHERE songid='$songid' and showid < $showid ORDER BY id DESC LIMIT 1";
 	if ($subresult = mysqli_query($link, $subquery)) {
 			while ($subobj = mysqli_fetch_object($subresult)) {
@@ -92,6 +113,39 @@ if ($ageresult = mysqli_query($link, $agequery)) {
 	}
 }
 
-
 echo "</table>\r\r";
+echo "<br /><br /><a href='fullshow.php?showid=$prev'>Previous show</a> | <a href='fullshow.php?showid=$next'>Next show</a><br /><br />";
 ?>
+
+</td>
+<td class="right">
+	
+<?php    
+	include_once "markdown.php";
+
+	// here's where I need to search in the directory for whatever the id is
+	// then pull it in
+	
+	$i = 0;
+	foreach (glob("shows/show-".$showid."*") as $filename) {
+		if ($i == 0) {
+			$filenameid = $filename;
+		}
+		// …
+		$i++;	    
+	}
+	
+	// echo $filenameid;	
+	// $name = "show-1-wellington-new-zealand.md";
+	
+	// open that stuff      
+	$theText = file_get_contents($filenameid);      
+	$theHTMLPage = Markdown($theText);
+		  
+	// and spit it out
+	echo $theHTMLPage;
+		  
+?>
+</td>
+</tr>
+</table>
